@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBHUB — Version History</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #080b10;
+      color: #fff;
+    }
+
+    .topbar {
+      height: 60px;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .logo {
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: #58a6ff;
+    }
+
+    .project {
+      color: #8b949e;
+      font-size: 12px;
+    }
+
+    .project strong {
+      color: #fff;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .top-button {
+      background: transparent;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 7px 10px;
+      font-size: 11px;
+    }
+
+    .top-button:hover {
+      border-color: #58a6ff;
+      color: #fff;
+    }
+
+    .primary {
+      background: #238636 !important;
+      border-color: #238636 !important;
+      color: #fff !important;
+    }
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+      width: 235px;
+      background: #0d1117;
+      border-right: 1px solid #21262d;
+      padding: 16px 10px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title {
+      color: #8b949e;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      padding: 7px 9px;
+      margin-bottom: 5px;
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #8b949e;
+      text-align: left;
+      padding: 9px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: #161b22;
+      color: #fff;
+    }
+
+    .nav-item.active {
+      border-left: 2px solid #58a6ff;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 28px;
+    }
+
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .header p {
+      color: #8b949e;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .new-version {
+      border: 0;
+      background: #238636;
+      color: #fff;
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .new-version:hover {
+      background: #2ea043;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .search {
+      flex: 1;
+      max-width: 420px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      color: #fff;
+      outline: none;
+      padding: 9px 11px;
+      font-size: 11px;
+    }
+
+    .filter {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 8px 10px;
+      font-size: 11px;
+      outline: none;
+    }
+
+    .version-count {
+      color: #6e7681;
+      font-size: 10px;
+    }
+
+    .versions {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .version-head {
+      display: grid;
+      grid-template-columns: 90px 1fr 150px 130px 120px;
+      gap: 10px;
+      padding: 11px 15px;
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+      color: #6e7681;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .version-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 150px 130px 120px;
+      gap: 10px;
+      align-items: center;
+      padding: 14px 15px;
+      border-bottom: 1px solid #21262d;
+      min-height: 72px;
+    }
+
+    .version-row:last-child {
+      border-bottom: 0;
+    }
+
+    .version-row:hover {
+      background: #0f141b;
+    }
+
+    .version-number {
+      color: #58a6ff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .version-name {
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .version-description {
+      color: #6e7681;
+      font-size: 10px;
+    }
+
+    .version-date {
+      color: #8b949e;
+      font-size: 10px;
+    }
+
+    .version-author {
+      color: #8b949e;
+      font-size: 10px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .small-button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 6px;
+      padding: 6px 7px;
+      font-size: 9px;
+    }
+
+    .small-button:hover {
+      border-color: #58a6ff;
+      color: #fff;
+    }
+
+    .restore-button:hover {
+      border-color: #2ea043;
+      color: #3fb950;
+    }
+
+    .empty {
+      display: none;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .empty h2 {
+      font-size: 17px;
+      margin-bottom: 7px;
+    }
+
+    .empty p {
+      color: #8b949e;
+      font-size: 11px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: rgba(0,0,0,.72);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 430px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 11px;
+      padding: 22px;
+    }
+
+    .modal-card h2 {
+      font-size: 17px;
+      margin-bottom: 7px;
+    }
+
+    .modal-card p {
+      color: #8b949e;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-bottom: 17px;
+    }
+
+    .field {
+      margin-bottom: 13px;
+    }
+
+    .field label {
+      display: block;
+      color: #8b949e;
+      font-size: 10px;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      background: #080b10;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      color: #fff;
+      padding: 9px;
+      outline: none;
+      font-family: inherit;
+      font-size: 11px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
+    .modal-actions button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-size: 11px;
+    }
+
+    .modal-actions .primary {
+      background: #238636;
+      border-color: #238636;
+    }
+
+    .compare-box {
+      margin-top: 10px;
+      background: #080b10;
+      border: 1px solid #21262d;
+      border-radius: 7px;
+      padding: 12px;
+      color: #8b949e;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 10px;
+      line-height: 1.7;
+      max-height: 180px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 190px;
+      }
+
+      .version-head,
+      .version-row {
+        grid-template-columns: 70px 1fr 110px;
+      }
+
+      .version-head div:nth-child(3),
+      .version-row > div:nth-child(3),
+      .version-head div:nth-child(4),
+      .version-row > div:nth-child(4) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 18px 12px;
+      }
+
+      .header {
+        flex-direction: column;
+      }
+
+      .toolbar {
+        flex-wrap: wrap;
+      }
+
+      .search {
+        max-width: none;
+        width: 100%;
+      }
+
+      .project {
+        display: none;
+      }
+
+      .top-actions .top-button:not(.primary) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <a class="logo" href="index2000.html">
+    WEB<span>HUB</span>
+  </a>
+
+  <div class="project">
+    Project:
+    <strong id="projectName">
+      My Project
+    </strong>
+  </div>
+
+  <div class="top-actions">
+
+    <button
+      class="top-button"
+      onclick="location.href='index4000.html'"
+    >
+      Workspace
+    </button>
+
+    <button
+      class="top-button primary"
+      id="createTopVersion"
+    >
+      New Version
+    </button>
+
+  </div>
+
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-title">
+      Project
+    </div>
+
+    <a
+      class="nav-item"
+      href="index2000.html"
+    >
+      Dashboard
+    </a>
+
+    <a
+      class="nav-item"
+      href="index3000.html"
+    >
+      Projects
+    </a>
+
+    <a
+      class="nav-item"
+      href="index4000.html"
+    >
+      Workspace
+    </a>
+
+    <a
+      class="nav-item active"
+      href="index5000.html"
+    >
+      Version History
+    </a>
+
+    <div class="sidebar-title">
+      Account
+    </div>
+
+    <a
+      class="nav-item"
+      href="index6000.html"
+    >
+      Settings
+    </a>
+
+    <a
+      class="nav-item"
+      href="index1000.html"
+    >
+      Logout
+    </a>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="header">
+
+      <div>
+
+        <h1>
+          Version History
+        </h1>
+
+        <p>
+          View, compare, and restore previous versions
+          of your project.
+        </p>
+
+      </div>
+
+      <button
+        class="new-version"
+        id="newVersion"
+      >
+        + Create Version
+      </button>
+
+    </div>
+
+    <div class="toolbar">
+
+      <input
+        class="search"
+        id="search"
+        type="search"
+        placeholder="Search versions..."
+      >
+
+      <select
+        class="filter"
+        id="filter"
+      >
+        <option value="all">
+          All Versions
+        </option>
+
+        <option value="recent">
+          Recent
+        </option>
+
+        <option value="oldest">
+          Oldest
+        </option>
+      </select>
+
+      <span
+        class="version-count"
+        id="versionCount"
+      >
+        0 versions
+      </span>
+
+    </div>
+
+    <section class="versions">
+
+      <div class="version-head">
+
+        <div>Version</div>
+        <div>Changes</div>
+        <div>Created</div>
+        <div>Author</div>
+        <div>Actions</div>
+
+      </div>
+
+      <div id="versionList"></div>
+
+      <div
+        class="empty"
+        id="empty"
+      >
+
+        <div class="empty-icon">
+          🕘
+        </div>
+
+        <h2>
+          No versions yet
+        </h2>
+
+        <p>
+          Create your first project version to
+          start tracking changes.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- CREATE VERSION MODAL -->
+
+<div
+  class="modal"
+  id="versionModal"
+>
+
+  <div class="modal-card">
+
+    <h2>
+      Create New Version
+    </h2>
+
+    <p>
+      Save a snapshot of the current project.
+      The project files will be stored by the WEBHUB backend.
+    </p>
+
+    <div class="field">
+
+      <label>
+        Version name
+      </label>
+
+      <input
+        id="versionName"
+        maxlength="80"
+        placeholder="Example: Initial release"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>
+        Description
+      </label>
+
+      <textarea
+        id="versionDescription"
+        rows="4"
+        maxlength="500"
+        placeholder="Describe what changed..."
+      ></textarea>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button id="cancelVersion">
+        Cancel
+      </button>
+
+      <button
+        class="primary"
+        id="saveVersion"
+      >
+        Create Version
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- COMPARE MODAL -->
+
+<div
+  class="modal"
+  id="compareModal"
+>
+
+  <div class="modal-card">
+
+    <h2 id="compareTitle">
+      Compare Version
+    </h2>
+
+    <p>
+      Version comparison will use the actual
+      project snapshots stored by WEBHUB.
+    </p>
+
+    <div
+      class="compare-box"
+      id="compareContent"
+    ></div>
+
+    <div class="modal-actions">
+
+      <button id="closeCompare">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  /*
+    WEBHUB VERSION API
+
+    GET
+    /api/projects/:projectId/versions
+
+    POST
+    /api/projects/:projectId/versions
+
+    GET
+    /api/projects/:projectId/versions/:versionId
+
+    GET
+    /api/projects/:projectId/versions/:versionId/compare
+
+    POST
+    /api/projects/:projectId/versions/:versionId/restore
+
+    Semua permission wajib diperiksa
+    oleh backend.
+  */
+
+  const API_BASE = "/api";
+
+  let versions = [];
+
+  let versionNumber = 0;
+
+  /*
+    Temporary UI state.
+
+    Ini hanya untuk pengujian halaman.
+    Bukan penyimpanan project permanen.
+  */
+
+  function loadDemoVersions() {
+
+    versions = [
+
+      {
+        id: "v3",
+        version: 3,
+        name: "Workspace update",
+        description:
+          "Updated project files and preview.",
+        created:
+          "2026-10-06 09:42",
+        author:
+          "you"
+      },
+
+      {
+        id: "v2",
+        version: 2,
+        name: "Added project styling",
+        description:
+          "Added CSS and improved project layout.",
+        created:
+          "2026-10-05 18:20",
+        author:
+          "you"
+      },
+
+      {
+        id: "v1",
+        version: 1,
+        name: "Initial version",
+        description:
+          "Created the first project structure.",
+        created:
+          "2026-10-05 15:10",
+        author:
+          "you"
+      }
+
+    ];
+
+    versionNumber = 3;
+
+  }
+
+  function renderVersions() {
+
+    const list =
+      document.getElementById("versionList");
+
+    const search =
+      document
+        .getElementById("search")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const filter =
+      document
+        .getElementById("filter")
+        .value;
+
+    let result =
+      versions.filter(version => {
+
+        if (!search) return true;
+
+        return (
+          version.name
+            .toLowerCase()
+            .includes(search) ||
+
+          version.description
+            .toLowerCase()
+            .includes(search)
+        );
+
+      });
+
+    if (filter === "oldest") {
+
+      result.sort(
+        (a, b) =>
+          a.version - b.version
+      );
+
+    } else {
+
+      result.sort(
+        (a, b) =>
+          b.version - a.version
+      );
+
+    }
+
+    list.innerHTML = "";
+
+    result.forEach(version => {
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "version-row";
+
+      row.innerHTML = `
+
+        <div class="version-number">
+          v${version.version}
+        </div>
+
+        <div>
+
+          <div class="version-name">
+            ${escapeHtml(version.name)}
+          </div>
+
+          <div class="version-description">
+            ${escapeHtml(version.description)}
+          </div>
+
+        </div>
+
+        <div class="version-date">
+          ${escapeHtml(version.created)}
+        </div>
+
+        <div class="version-author">
+          ${escapeHtml(version.author)}
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="small-button"
+            data-action="view"
+            data-id="${version.id}"
+          >
+            View
+          </button>
+
+          <button
+            class="small-button"
+            data-action="compare"
+            data-id="${version.id}"
+          >
+            Compare
+          </button>
+
+          <button
+            class="small-button restore-button"
+            data-action="restore"
+            data-id="${version.id}"
+          >
+            Restore
+          </button>
+
+        </div>
+
+      `;
+
+      list.appendChild(row);
+
+    });
+
+    document
+      .getElementById("versionCount")
+      .textContent =
+        `${result.length} version${result.length === 1 ? "" : "s"}`;
+
+    document
+      .getElementById("empty")
+      .style.display =
+        result.length === 0
+          ? "block"
+          : "none";
+
+  }
+
+  function openCreateVersion() {
+
+    document
+      .getElementById("versionModal")
+      .classList.add("show");
+
+    document
+      .getElementById("versionName")
+      .value = "";
+
+    document
+      .getElementById("versionDescription")
+      .value = "";
+
+    document
+      .getElementById("versionName")
+      .focus();
+
+  }
+
+  function closeCreateVersion() {
+
+    document
+      .getElementById("versionModal")
+      .classList.remove("show");
+
+  }
+
+  function createVersion() {
+
+    const name =
+      document
+        .getElementById("versionName")
+        .value
+        .trim();
+
+    const description =
+      document
+        .getElementById("versionDescription")
+        .value
+        .trim();
+
+    if (!name) {
+
+      alert(
+        "Masukkan nama versi terlebih dahulu."
+      );
+
+      return;
+
+    }
+
+    versionNumber++;
+
+    versions.unshift({
+
+      id:
+        "local-v" +
+        versionNumber,
+
+      version:
+        versionNumber,
+
+      name,
+
+      description:
+        description ||
+        "No description.",
+
+      created:
+        new Date()
+          .toLocaleString(
+            "en-GB",
+            {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit"
+            }
+          ),
+
+      author:
+        "you"
+
+    });
+
+    closeCreateVersion();
+
+    renderVersions();
+
+    /*
+      Backend nanti:
+
+      POST
+      /api/projects/:projectId/versions
+
+      Body:
+      {
+        name,
+        description
+      }
+    */
+
+  }
+
+  function findVersion(id) {
+
+    return versions.find(
+      version =>
+        version.id === id
+    );
+
+  }
+
+  function viewVersion(id) {
+
+    const version =
+      findVersion(id);
+
+    if (!version) return;
+
+    alert(
+      `Version v${version.version}\n\n` +
+      `Name: ${version.name}\n` +
+      `Created: ${version.created}\n\n` +
+      `${version.description}`
+    );
+
+    /*
+      Backend nanti dapat membuka
+      snapshot project secara penuh.
+    */
+
+  }
+
+  function compareVersion(id) {
+
+    const version =
+      findVersion(id);
+
+    if (!version) return;
+
+    document
+      .getElementById("compareTitle")
+      .textContent =
+        `Compare v${version.version}`;
+
+    document
+      .getElementById("compareContent")
+      .textContent =
+`Version: v${version.version}
+
+${version.name}
+
+Changes:
+${version.description}
+
+File comparison will be loaded
+from the WEBHUB version storage.
+
+Backend endpoint:
+GET /api/projects/:projectId/versions/${version.id}/compare`;
+
+    document
+      .getElementById("compareModal")
+      .classList.add("show");
+
+  }
+
+  function closeCompare() {
+
+    document
+      .getElementById("compareModal")
+      .classList.remove("show");
+
+  }
+
+  function restoreVersion(id) {
+
+    const version =
+      findVersion(id);
+
+    if (!version) return;
+
+    const confirmed =
+      confirm(
+        `Restore project to version v${version.version}?`
+      );
+
+    if (!confirmed) return;
+
+    /*
+      Restore wajib dilakukan oleh backend.
+      Frontend tidak boleh mengubah
+      project storage secara langsung.
+    */
+
+    alert(
+      `Restore request for v${version.version} akan dikirim ke backend WEBHUB.`
+    );
+
+    /*
+      POST
+      /api/projects/:projectId/versions/:versionId/restore
+    */
+
+  }
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+  document
+    .getElementById("newVersion")
+    .addEventListener(
+      "click",
+      openCreateVersion
+    );
+
+  document
+    .getElementById("createTopVersion")
+    .addEventListener(
+      "click",
+      openCreateVersion
+    );
+
+  document
+    .getElementById("cancelVersion")
+    .addEventListener(
+      "click",
+      closeCreateVersion
+    );
+
+  document
+    .getElementById("saveVersion")
+    .addEventListener(
+      "click",
+      createVersion
+    );
+
+  document
+    .getElementById("closeCompare")
+    .addEventListener(
+      "click",
+      closeCompare
+    );
+
+  document
+    .getElementById("search")
+    .addEventListener(
+      "input",
+      renderVersions
+    );
+
+  document
+    .getElementById("filter")
+    .addEventListener(
+      "change",
+      renderVersions
+    );
+
+  document
+    .getElementById("versionList")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        const button =
+          event.target.closest(
+            "button[data-action]"
+          );
+
+        if (!button) return;
+
+        const action =
+          button.dataset.action;
+
+        const id =
+          button.dataset.id;
+
+        if (action === "view") {
+          viewVersion(id);
+        }
+
+        if (action === "compare") {
+          compareVersion(id);
+        }
+
+        if (action === "restore") {
+          restoreVersion(id);
+        }
+
+      }
+    );
+
+  document
+    .getElementById("versionModal")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        if (event.target === this) {
+          closeCreateVersion();
+        }
+
+      }
+    );
+
+  document
+    .getElementById("compareModal")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        if (event.target === this) {
+          closeCompare();
+        }
+
+      }
+    );
+
+  loadDemoVersions();
+
+  renderVersions();
+
+</script>
+
+</body>
+</html>

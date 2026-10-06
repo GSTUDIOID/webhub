@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBHUB - Account</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(
+          circle at top,
+          #172033 0%,
+          #080b12 45%,
+          #05070b 100%
+        );
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand h1 {
+      font-size: 38px;
+      letter-spacing: -1px;
+      font-weight: 800;
+    }
+
+    .brand h1 span {
+      color: #58a6ff;
+    }
+
+    .brand p {
+      margin-top: 8px;
+      color: #8b949e;
+      font-size: 14px;
+    }
+
+    .card {
+      background: rgba(13, 17, 23, 0.96);
+      border: 1px solid #30363d;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #161b22;
+      border-radius: 10px;
+      padding: 5px;
+      margin-bottom: 25px;
+    }
+
+    .tab {
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #8b949e;
+      padding: 11px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .tab.active {
+      background: #21262d;
+      color: #fff;
+    }
+
+    .form {
+      display: none;
+    }
+
+    .form.active {
+      display: block;
+    }
+
+    .form h2 {
+      font-size: 21px;
+      margin-bottom: 7px;
+    }
+
+    .form-description {
+      color: #8b949e;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c9d1d9;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 9px;
+      color: #fff;
+      padding: 12px 13px;
+      outline: none;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    input:focus {
+      border-color: #58a6ff;
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, .12);
+    }
+
+    input::placeholder {
+      color: #6e7681;
+    }
+
+    .username-info {
+      margin-top: 7px;
+      color: #6e7681;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: #8b949e;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .password-toggle:hover {
+      color: #fff;
+    }
+
+    .button {
+      width: 100%;
+      border: 0;
+      border-radius: 9px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #238636;
+      color: #fff;
+      transition: .2s;
+      margin-top: 4px;
+    }
+
+    .button:hover {
+      background: #2ea043;
+    }
+
+    .button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .forgot {
+      display: block;
+      text-align: right;
+      margin-top: 11px;
+      color: #58a6ff;
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .forgot:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 16px;
+      padding: 11px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: rgba(248, 81, 73, .10);
+      border: 1px solid rgba(248, 81, 73, .35);
+      color: #ff7b72;
+    }
+
+    .message.success {
+      background: rgba(46, 160, 67, .10);
+      border: 1px solid rgba(46, 160, 67, .35);
+      color: #56d364;
+    }
+
+    .footer {
+      text-align: center;
+      color: #6e7681;
+      font-size: 11px;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .security {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid #21262d;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .security span {
+      color: #8b949e;
+      font-size: 11px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .brand h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <div class="brand">
+      <h1>
+        WEB<span>HUB</span>
+      </h1>
+
+      <p>
+        Your project space.
+      </p>
+    </div>
+
+    <section class="card">
+
+      <div class="tabs">
+
+        <button
+          class="tab active"
+          id="loginTab"
+          type="button"
+        >
+          Login
+        </button>
+
+        <button
+          class="tab"
+          id="registerTab"
+          type="button"
+        >
+          Create Account
+        </button>
+
+      </div>
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+      <!-- LOGIN -->
+
+      <form
+        id="loginForm"
+        class="form active"
+      >
+
+        <h2>
+          Welcome back
+        </h2>
+
+        <p class="form-description">
+          Sign in to access your WEBHUB projects.
+        </p>
+
+        <div class="field">
+
+          <label for="loginIdentity">
+            Username or Email
+          </label>
+
+          <input
+            id="loginIdentity"
+            name="identity"
+            type="text"
+            autocomplete="username"
+            placeholder="Enter username or email"
+            required
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label for="loginPassword">
+            Password
+          </label>
+
+          <div class="input-wrap">
+
+            <input
+              id="loginPassword"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+              required
+            >
+
+            <button
+              class="password-toggle"
+              type="button"
+              data-target="loginPassword"
+            >
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+        <button
+          class="button"
+          id="loginButton"
+          type="submit"
+        >
+          Login
+        </button>
+
+        <a
+          class="forgot"
+          href="#"
+          id="forgotPassword"
+        >
+          Forgot password?
+        </a>
+
+      </form>
+
+      <!-- REGISTER -->
+
+      <form
+        id="registerForm"
+        class="form"
+      >
+
+        <h2>
+          Create your account
+        </h2>
+
+        <p class="form-description">
+          Create your WEBHUB identity. Your username will be your
+          public identity on WEBHUB.
+        </p>
+
+        <div class="field">
+
+          <label for="registerUsername">
+            Username
+          </label>
+
+          <input
+            id="registerUsername"
+            name="username"
+            type="text"
+            autocomplete="username"
+            placeholder="Choose a username"
+            minlength="3"
+            maxlength="30"
+            required
+          >
+
+          <div class="username-info">
+            3-30 characters. Use letters, numbers, hyphens or underscores.
+            Your username must be unique.
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label for="registerEmail">
+            Email
+          </label>
+
+          <input
+            id="registerEmail"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="you@example.com"
+            required
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label for="registerPassword">
+            Password
+          </label>
+
+          <div class="input-wrap">
+
+            <input
+              id="registerPassword"
+              name="password"
+              type="password"
+              autocomplete="new-password"
+              placeholder="Create a strong password"
+              minlength="8"
+              required
+            >
+
+            <button
+              class="password-toggle"
+              type="button"
+              data-target="registerPassword"
+            >
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label for="registerPasswordConfirm">
+            Confirm Password
+          </label>
+
+          <div class="input-wrap">
+
+            <input
+              id="registerPasswordConfirm"
+              name="passwordConfirm"
+              type="password"
+              autocomplete="new-password"
+              placeholder="Repeat your password"
+              minlength="8"
+              required
+            >
+
+            <button
+              class="password-toggle"
+              type="button"
+              data-target="registerPasswordConfirm"
+            >
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+        <button
+          class="button"
+          id="registerButton"
+          type="submit"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+      <div class="security">
+        <span>
+          Secure Authentication
+        </span>
+
+        <span>
+          Protected Account
+        </span>
+      </div>
+
+    </section>
+
+    <div class="footer">
+      WEBHUB Account System<br>
+      Your projects. Your identity.
+    </div>
+
+  </main>
+
+  <script>
+    const API_BASE = "/api";
+
+    const loginTab =
+      document.getElementById("loginTab");
+
+    const registerTab =
+      document.getElementById("registerTab");
+
+    const loginForm =
+      document.getElementById("loginForm");
+
+    const registerForm =
+      document.getElementById("registerForm");
+
+    const message =
+      document.getElementById("message");
+
+    function showForm(type) {
+
+      clearMessage();
+
+      if (type === "login") {
+
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+
+        loginForm.classList.add("active");
+        registerForm.classList.remove("active");
+
+      } else {
+
+        loginTab.classList.remove("active");
+        registerTab.classList.add("active");
+
+        loginForm.classList.remove("active");
+        registerForm.classList.add("active");
+      }
+    }
+
+    function showMessage(
+      text,
+      type = "error"
+    ) {
+
+      message.textContent = text;
+
+      message.className =
+        "message show " + type;
+    }
+
+    function clearMessage() {
+
+      message.textContent = "";
+
+      message.className =
+        "message";
+    }
+
+    function togglePassword(
+      inputId,
+      button
+    ) {
+
+      const input =
+        document.getElementById(inputId);
+
+      if (input.type === "password") {
+
+        input.type = "text";
+        button.textContent = "Hide";
+
+      } else {
+
+        input.type = "password";
+        button.textContent = "Show";
+      }
+    }
+
+    function validUsername(
+      username
+    ) {
+
+      return /^[a-z0-9_-]{3,30}$/i.test(
+        username
+      );
+    }
+
+    function validEmail(
+      email
+    ) {
+
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        email
+      );
+    }
+
+    loginTab.addEventListener(
+      "click",
+      () => {
+        showForm("login");
+      }
+    );
+
+    registerTab.addEventListener(
+      "click",
+      () => {
+        showForm("register");
+      }
+    );
+
+    document
+      .querySelectorAll(".password-toggle")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            togglePassword(
+              button.dataset.target,
+              button
+            );
+          }
+        );
+      });
+
+    loginForm.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+        clearMessage();
+
+        const identity =
+          document
+            .getElementById(
+              "loginIdentity"
+            )
+            .value
+            .trim();
+
+        const password =
+          document
+            .getElementById(
+              "loginPassword"
+            )
+            .value;
+
+        if (!identity || !password) {
+
+          showMessage(
+            "Username/email dan password wajib diisi."
+          );
+
+          return;
+        }
+
+        const button =
+          document.getElementById(
+            "loginButton"
+          );
+
+        button.disabled = true;
+        button.textContent =
+          "Signing in...";
+
+        try {
+
+          const response =
+            await fetch(
+              `${API_BASE}/auth/login`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                  identifier:
+                    identity,
+                  password
+                })
+              }
+            );
+
+          const data =
+            await response
+              .json()
+              .catch(() => ({}));
+
+          if (
+            !response.ok ||
+            !data.success
+          ) {
+
+            throw new Error(
+              data.message ||
+              "Login gagal."
+            );
+          }
+
+          showMessage(
+            "Login berhasil.",
+            "success"
+          );
+
+          window.location.href =
+            "index2000.html";
+
+        } catch (error) {
+
+          showMessage(
+            error.message ||
+            "Login gagal."
+          );
+
+        } finally {
+
+          button.disabled = false;
+
+          button.textContent =
+            "Login";
+        }
+      }
+    );
+
+    registerForm.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+        clearMessage();
+
+        const username =
+          document
+            .getElementById(
+              "registerUsername"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+        const email =
+          document
+            .getElementById(
+              "registerEmail"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+        const password =
+          document
+            .getElementById(
+              "registerPassword"
+            )
+            .value;
+
+        const passwordConfirm =
+          document
+            .getElementById(
+              "registerPasswordConfirm"
+            )
+            .value;
+
+        if (
+          !validUsername(
+            username
+          )
+        ) {
+
+          showMessage(
+            "Username hanya boleh berisi huruf, angka, hyphen, atau underscore dan panjangnya 3-30 karakter."
+          );
+
+          return;
+        }
+
+        if (
+          !validEmail(
+            email
+          )
+        ) {
+
+          showMessage(
+            "Format email tidak valid."
+          );
+
+          return;
+        }
+
+        if (
+          password.length < 8
+        ) {
+
+          showMessage(
+            "Password minimal 8 karakter."
+          );
+
+          return;
+        }
+
+        if (
+          password !==
+          passwordConfirm
+        ) {
+
+          showMessage(
+            "Konfirmasi password tidak sama."
+          );
+
+          return;
+        }
+
+        const button =
+          document.getElementById(
+            "registerButton"
+          );
+
+        button.disabled = true;
+
+        button.textContent =
+          "Creating...";
+
+        try {
+
+          const response =
+            await fetch(
+              `${API_BASE}/auth/register`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                  username,
+                  email,
+                  password,
+                  confirmPassword:
+                    passwordConfirm
+                })
+              }
+            );
+
+          const data =
+            await response
+              .json()
+              .catch(() => ({}));
+
+          if (
+            !response.ok ||
+            !data.success
+          ) {
+
+            throw new Error(
+              data.message ||
+              "Pembuatan akun gagal."
+            );
+          }
+
+          registerForm.reset();
+
+          showForm("login");
+
+          document
+            .getElementById(
+              "loginIdentity"
+            )
+            .value = username;
+
+          showMessage(
+            "Akun berhasil dibuat. Silakan login.",
+            "success"
+          );
+
+        } catch (error) {
+
+          showMessage(
+            error.message ||
+            "Pembuatan akun gagal."
+          );
+
+        } finally {
+
+          button.disabled = false;
+
+          button.textContent =
+            "Create Account";
+        }
+      }
+    );
+
+    document
+      .getElementById(
+        "forgotPassword"
+      )
+      .addEventListener(
+        "click",
+        async function(event) {
+
+          event.preventDefault();
+
+          clearMessage();
+
+          const email =
+            window.prompt(
+              "Masukkan email akun WEBHUB:"
+            );
+
+          if (!email) {
+            return;
+          }
+
+          try {
+
+            const response =
+              await fetch(
+                `${API_BASE}/auth/forgot-password`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type":
+                      "application/json"
+                  },
+                  credentials: "include",
+                  body: JSON.stringify({
+                    email:
+                      email.trim()
+                        .toLowerCase()
+                  })
+                }
+              );
+
+            const data =
+              await response
+                .json()
+                .catch(() => ({}));
+
+            if (
+              !response.ok ||
+              !data.success
+            ) {
+
+              throw new Error(
+                data.message ||
+                "Permintaan reset password gagal."
+              );
+            }
+
+            showMessage(
+              data.message ||
+              "Permintaan reset password diterima.",
+              "success"
+            );
+
+          } catch (error) {
+
+            showMessage(
+              error.message ||
+              "Permintaan reset password gagal."
+            );
+          }
+        }
+      );
+  </script>
+
+</body>
+</html>

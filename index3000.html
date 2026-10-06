@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBHUB - Projects</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #080b10;
+      color: #ffffff;
+    }
+
+    .topbar {
+      height: 60px;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .logo {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: #58a6ff;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .top-actions button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 8px 11px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .top-actions button:hover {
+      border-color: #58a6ff;
+      color: #ffffff;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 50px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      color: #8b949e;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .primary-button {
+      border: 1px solid #238636;
+      background: #238636;
+      color: #ffffff;
+      border-radius: 7px;
+      padding: 9px 13px;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .primary-button:hover {
+      background: #2ea043;
+    }
+
+    .create-panel {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 25px;
+      display: none;
+    }
+
+    .create-panel.show {
+      display: block;
+    }
+
+    .create-panel h2 {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      color: #8b949e;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: #080b10;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      color: #ffffff;
+      padding: 10px;
+      outline: none;
+      font-size: 12px;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #58a6ff;
+    }
+
+    .create-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .secondary-button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 9px 13px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .secondary-button:hover {
+      border-color: #58a6ff;
+      color: #ffffff;
+    }
+
+    .section-title {
+      color: #8b949e;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 12px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .project-card {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      padding: 17px;
+      cursor: pointer;
+      transition:
+        border-color .15s,
+        transform .15s;
+    }
+
+    .project-card:hover {
+      border-color: #58a6ff;
+      transform: translateY(-1px);
+    }
+
+    .project-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      word-break: break-word;
+    }
+
+    .project-description {
+      color: #8b949e;
+      font-size: 11px;
+      line-height: 1.5;
+      min-height: 33px;
+      margin-bottom: 13px;
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-top: 1px solid #21262d;
+      padding-top: 11px;
+    }
+
+    .visibility {
+      color: #8b949e;
+      border: 1px solid #30363d;
+      border-radius: 20px;
+      padding: 3px 7px;
+      font-size: 9px;
+    }
+
+    .project-open {
+      color: #58a6ff;
+      font-size: 10px;
+    }
+
+    .empty {
+      background: #0d1117;
+      border: 1px dashed #30363d;
+      border-radius: 10px;
+      padding: 35px 20px;
+      text-align: center;
+      color: #6e7681;
+      font-size: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .status {
+      min-height: 18px;
+      color: #8b949e;
+      font-size: 11px;
+      margin-bottom: 13px;
+    }
+
+    .error {
+      color: #f85149;
+    }
+
+    .success {
+      color: #3fb950;
+    }
+
+    @media (max-width: 850px) {
+      .projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 0 12px;
+      }
+
+      .page {
+        padding: 20px 12px 40px;
+      }
+
+      .page-header {
+        flex-direction: column;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <a
+    class="logo"
+    href="index2000.html"
+  >
+    WEB<span>HUB</span>
+  </a>
+
+  <div class="top-actions">
+
+    <button
+      id="dashboardButton"
+      type="button"
+    >
+      Dashboard
+    </button>
+
+    <button
+      id="settingsButton"
+      type="button"
+    >
+      Settings
+    </button>
+
+  </div>
+
+</header>
+
+<main class="page">
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Projects
+      </h1>
+
+      <p>
+        Buat dan kelola project WEBHUB kamu.
+      </p>
+
+    </div>
+
+    <button
+      class="primary-button"
+      id="newProjectButton"
+      type="button"
+    >
+      New Project
+    </button>
+
+  </div>
+
+  <div
+    class="create-panel"
+    id="createPanel"
+  >
+
+    <h2>
+      Create New Project
+    </h2>
+
+    <div
+      class="status"
+      id="createStatus"
+    ></div>
+
+    <div class="field">
+
+      <label for="projectNameInput">
+        Project Name
+      </label>
+
+      <input
+        id="projectNameInput"
+        type="text"
+        maxlength="100"
+        placeholder="My Website"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label for="projectDescriptionInput">
+        Description
+      </label>
+
+      <textarea
+        id="projectDescriptionInput"
+        maxlength="1000"
+        placeholder="Project description"
+      ></textarea>
+
+    </div>
+
+    <div class="field">
+
+      <label for="projectVisibilityInput">
+        Visibility
+      </label>
+
+      <select
+        id="projectVisibilityInput"
+      >
+        <option value="private">
+          Private
+        </option>
+
+        <option value="public">
+          Public
+        </option>
+      </select>
+
+    </div>
+
+    <div class="create-actions">
+
+      <button
+        class="secondary-button"
+        id="cancelCreateButton"
+        type="button"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="primary-button"
+        id="createProjectButton"
+        type="button"
+      >
+        Create Project
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="section-title">
+    Your Projects
+  </div>
+
+  <div
+    class="projects-grid"
+    id="projectsGrid"
+  >
+
+    <div class="empty">
+      Loading projects
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+  const API_BASE = "/api";
+
+  let projects = [];
+
+  function setCreateStatus(
+    message,
+    type
+  ) {
+
+    const element =
+      document.getElementById(
+        "createStatus"
+      );
+
+    element.textContent =
+      message || "";
+
+    element.className =
+      "status" +
+      (
+        type
+          ? " " + type
+          : ""
+      );
+  }
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
+      .replaceAll(
+        ">",
+        "&gt;"
+      )
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
+      .replaceAll(
+        "'",
+        "&#039;"
+      );
+  }
+
+  function openWorkspace(
+    projectId
+  ) {
+
+    if (!projectId) {
+
+      alert(
+        "Project ID tidak tersedia."
+      );
+
+      return;
+    }
+
+    localStorage.setItem(
+      "webhub_current_project_id",
+      projectId
+    );
+
+    window.location.href =
+      "index4000.html?projectId=" +
+      encodeURIComponent(
+        projectId
+      );
+  }
+
+  function renderProjects() {
+
+    const grid =
+      document.getElementById(
+        "projectsGrid"
+      );
+
+    grid.innerHTML = "";
+
+    if (!projects.length) {
+
+      grid.innerHTML =
+        '<div class="empty">Belum ada project. Tekan New Project untuk membuat project pertama.</div>';
+
+      return;
+    }
+
+    projects.forEach(
+      function(project) {
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+        card.className =
+          "project-card";
+
+        card.innerHTML =
+          '<div class="project-name">' +
+          escapeHtml(
+            project.name
+          ) +
+          "</div>" +
+
+          '<div class="project-description">' +
+          escapeHtml(
+            project.description ||
+            "Tidak ada deskripsi."
+          ) +
+          "</div>" +
+
+          '<div class="project-meta">' +
+
+            '<span class="visibility">' +
+            (
+              project.visibility === "public"
+                ? "Public"
+                : "Private"
+            ) +
+            "</span>" +
+
+            '<span class="project-open">' +
+            "Open Workspace" +
+            "</span>" +
+
+          "</div>";
+
+        card.addEventListener(
+          "click",
+          function() {
+
+            openWorkspace(
+              project.id
+            );
+          }
+        );
+
+        grid.appendChild(
+          card
+        );
+      }
+    );
+  }
+
+  async function loadProjects() {
+
+    const grid =
+      document.getElementById(
+        "projectsGrid"
+      );
+
+    grid.innerHTML =
+      '<div class="empty">Loading projects</div>';
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE + "/projects",
+          {
+            method: "GET",
+            credentials: "include"
+          }
+        );
+
+      if (
+        response.status ===
+        401
+      ) {
+
+        window.location.href =
+          "index1000.html";
+
+        return;
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Gagal mengambil project."
+        );
+      }
+
+      const data =
+        await response.json();
+
+      projects =
+        Array.isArray(
+          data.projects
+        )
+          ? data.projects
+          : [];
+
+      renderProjects();
+
+    } catch (error) {
+
+      console.error(
+        "LOAD PROJECTS ERROR:",
+        error
+      );
+
+      grid.innerHTML =
+        '<div class="empty error">' +
+        escapeHtml(
+          error.message ||
+          "Gagal mengambil project."
+        ) +
+        "</div>";
+    }
+  }
+
+  async function createProject() {
+
+    const nameInput =
+      document.getElementById(
+        "projectNameInput"
+      );
+
+    const descriptionInput =
+      document.getElementById(
+        "projectDescriptionInput"
+      );
+
+    const visibilityInput =
+      document.getElementById(
+        "projectVisibilityInput"
+      );
+
+    const name =
+      nameInput.value.trim();
+
+    const description =
+      descriptionInput.value.trim();
+
+    const visibility =
+      visibilityInput.value;
+
+    if (!name) {
+
+      setCreateStatus(
+        "Nama project wajib diisi.",
+        "error"
+      );
+
+      nameInput.focus();
+
+      return;
+    }
+
+    if (
+      name.length > 100
+    ) {
+
+      setCreateStatus(
+        "Nama project terlalu panjang.",
+        "error"
+      );
+
+      return;
+    }
+
+    setCreateStatus(
+      "Membuat project..."
+    );
+
+    const button =
+      document.getElementById(
+        "createProjectButton"
+      );
+
+    button.disabled = true;
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE + "/projects",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body:
+              JSON.stringify({
+                name,
+                description,
+                visibility
+              })
+          }
+        );
+
+      if (
+        response.status ===
+        401
+      ) {
+
+        window.location.href =
+          "index1000.html";
+
+        return;
+      }
+
+      const data =
+        await response
+          .json()
+          .catch(
+            function() {
+              return {};
+            }
+          );
+
+      if (
+        !response.ok ||
+        !data.success ||
+        !data.project
+      ) {
+
+        throw new Error(
+          data.message ||
+          "Project gagal dibuat."
+        );
+      }
+
+      const project =
+        data.project;
+
+      localStorage.setItem(
+        "webhub_current_project_id",
+        project.id
+      );
+
+      setCreateStatus(
+        "Project berhasil dibuat.",
+        "success"
+      );
+
+      window.location.href =
+        "index4000.html?projectId=" +
+        encodeURIComponent(
+          project.id
+        );
+
+    } catch (error) {
+
+      console.error(
+        "CREATE PROJECT ERROR:",
+        error
+      );
+
+      setCreateStatus(
+        error.message ||
+        "Project gagal dibuat.",
+        "error"
+      );
+
+    } finally {
+
+      button.disabled =
+        false;
+    }
+  }
+
+  document
+    .getElementById(
+      "dashboardButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        window.location.href =
+          "index2000.html";
+      }
+    );
+
+  document
+    .getElementById(
+      "settingsButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        window.location.href =
+          "index6000.html";
+      }
+    );
+
+  document
+    .getElementById(
+      "newProjectButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        document
+          .getElementById(
+            "createPanel"
+          )
+          .classList.toggle(
+            "show"
+          );
+
+        if (
+          document
+            .getElementById(
+              "createPanel"
+            )
+            .classList.contains(
+              "show"
+            )
+        ) {
+
+          document
+            .getElementById(
+              "projectNameInput"
+            )
+            .focus();
+        }
+      }
+    );
+
+  document
+    .getElementById(
+      "cancelCreateButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        document
+          .getElementById(
+            "createPanel"
+          )
+          .classList.remove(
+            "show"
+          );
+
+        setCreateStatus(
+          ""
+        );
+      }
+    );
+
+  document
+    .getElementById(
+      "createProjectButton"
+    )
+    .addEventListener(
+      "click",
+      createProject
+    );
+
+  document
+    .getElementById(
+      "projectNameInput"
+    )
+    .addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key ===
+          "Enter"
+        ) {
+
+          event.preventDefault();
+
+          createProject();
+        }
+      }
+    );
+
+  loadProjects();
+</script>
+
+</body>
+</html>

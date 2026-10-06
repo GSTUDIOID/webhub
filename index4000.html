@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBHUB - Workspace</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #080b10;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 60px;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+    }
+
+    .logo {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: #58a6ff;
+    }
+
+    .project-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    .project-title strong {
+      color: #ffffff;
+    }
+
+    .visibility-badge {
+      color: #8b949e;
+      border: 1px solid #30363d;
+      border-radius: 20px;
+      padding: 3px 7px;
+      font-size: 9px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .top-actions button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 7px 10px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .top-actions button:hover {
+      border-color: #58a6ff;
+      color: #ffffff;
+    }
+
+    .save-button {
+      background: #238636 !important;
+      border-color: #238636 !important;
+      color: #ffffff !important;
+    }
+
+    .save-button:hover {
+      background: #2ea043 !important;
+    }
+
+    .workspace {
+      height: calc(100vh - 60px);
+      display: flex;
+    }
+
+    .files-panel {
+      width: 245px;
+      background: #0d1117;
+      border-right: 1px solid #21262d;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .panel-header {
+      min-height: 47px;
+      padding: 0 13px;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .panel-header strong {
+      flex: 1;
+      color: #8b949e;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .file-add {
+      min-width: 30px;
+      height: 25px;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      background: transparent;
+      color: #c9d1d9;
+      cursor: pointer;
+      font-size: 10px;
+      padding: 0 7px;
+    }
+
+    .file-add:hover {
+      border-color: #58a6ff;
+      color: #58a6ff;
+    }
+
+    .file-search {
+      padding: 9px;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .file-search input {
+      width: 100%;
+      background: #080b10;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 7px 8px;
+      color: #ffffff;
+      outline: none;
+      font-size: 11px;
+    }
+
+    .file-search input:focus {
+      border-color: #58a6ff;
+    }
+
+    .file-list {
+      padding: 8px 6px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .file {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 9px;
+      border-radius: 6px;
+      color: #8b949e;
+      cursor: pointer;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .file:hover,
+    .file.active {
+      background: #161b22;
+      color: #ffffff;
+    }
+
+    .file.active {
+      border-left: 2px solid #58a6ff;
+    }
+
+    .file-icon {
+      width: 34px;
+      flex-shrink: 0;
+      color: #6e7681;
+      font-size: 8px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .editor-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tabs {
+      height: 43px;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      overflow-x: auto;
+    }
+
+    .tab {
+      min-width: 130px;
+      max-width: 180px;
+      border-right: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 10px;
+      color: #8b949e;
+      font-size: 11px;
+    }
+
+    .tab.active {
+      background: #080b10;
+      color: #ffffff;
+      border-top: 2px solid #58a6ff;
+    }
+
+    .tab-close {
+      color: #6e7681;
+      cursor: pointer;
+      font-size: 9px;
+    }
+
+    .tab-close:hover {
+      color: #ffffff;
+    }
+
+    .editor-toolbar {
+      min-height: 43px;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      gap: 10px;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toolbar-button {
+      border: 1px solid #30363d;
+      background: #161b22;
+      color: #c9d1d9;
+      border-radius: 6px;
+      padding: 6px 9px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .toolbar-button:hover {
+      border-color: #58a6ff;
+      color: #ffffff;
+    }
+
+    .status {
+      color: #6e7681;
+      font-size: 10px;
+    }
+
+    .editor {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      background: #080b10;
+    }
+
+    .line-numbers {
+      width: 48px;
+      padding-top: 13px;
+      background: #080b10;
+      border-right: 1px solid #161b22;
+      color: #484f58;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      line-height: 20px;
+      text-align: right;
+      padding-right: 10px;
+      user-select: none;
+      overflow: hidden;
+      white-space: pre;
+    }
+
+    .code {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      resize: none;
+      border: 0;
+      outline: 0;
+      background: #080b10;
+      color: #c9d1d9;
+      padding: 13px 15px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      line-height: 20px;
+      tab-size: 2;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    .preview-panel {
+      width: 390px;
+      background: #0d1117;
+      border-left: 1px solid #21262d;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .preview-header {
+      height: 47px;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+
+    .preview-header strong {
+      font-size: 11px;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .preview-header button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .preview-frame {
+      flex: 1;
+      background: #ffffff;
+    }
+
+    .preview-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #ffffff;
+    }
+
+    .bottom {
+      height: 28px;
+      background: #161b22;
+      border-top: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      color: #8b949e;
+      font-size: 9px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 390px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 11px;
+      padding: 22px;
+    }
+
+    .modal-card h2 {
+      font-size: 17px;
+      margin-bottom: 15px;
+    }
+
+    .modal-card input {
+      width: 100%;
+      background: #080b10;
+      border: 1px solid #30363d;
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 7px;
+      outline: none;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    .modal-actions button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      padding: 8px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .modal-actions .primary {
+      background: #238636;
+      border-color: #238636;
+      color: #ffffff;
+    }
+
+    @media (max-width: 1050px) {
+      .preview-panel {
+        display: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .files-panel {
+        width: 185px;
+      }
+
+      .project-title {
+        display: none;
+      }
+
+      .top-actions button:not(.save-button) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .files-panel {
+        display: none;
+      }
+
+      .topbar {
+        padding: 0 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <a class="logo" href="index2000.html">
+    WEB<span>HUB</span>
+  </a>
+
+  <div class="project-title">
+    <strong id="projectName">Loading</strong>
+
+    <span
+      class="visibility-badge"
+      id="visibilityBadge"
+    >
+      Private
+    </span>
+  </div>
+
+  <div class="top-actions">
+
+    <button
+      type="button"
+      id="dashboardButton"
+    >
+      Dashboard
+    </button>
+
+    <button
+      type="button"
+      id="historyButton"
+    >
+      History
+    </button>
+
+    <button
+      type="button"
+      id="downloadButton"
+    >
+      Export
+    </button>
+
+    <button
+      type="button"
+      class="save-button"
+      id="saveButton"
+    >
+      Save
+    </button>
+
+  </div>
+
+</header>
+
+<div class="workspace">
+
+  <aside class="files-panel">
+
+    <div class="panel-header">
+
+      <strong>Files</strong>
+
+      <button
+        class="file-add"
+        id="addFileButton"
+        type="button"
+      >
+        New
+      </button>
+
+      <button
+        class="file-add"
+        id="uploadAssetButton"
+        type="button"
+      >
+        Upload
+      </button>
+
+      <input
+        id="assetFileInput"
+        type="file"
+        accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml,image/x-icon"
+        hidden
+      >
+
+    </div>
+
+    <div class="file-search">
+
+      <input
+        id="fileSearch"
+        type="search"
+        placeholder="Search files"
+      >
+
+    </div>
+
+    <div
+      class="file-list"
+      id="fileList"
+    ></div>
+
+  </aside>
+
+  <main class="editor-area">
+
+    <div
+      class="tabs"
+      id="tabs"
+    ></div>
+
+    <div class="editor-toolbar">
+
+      <div class="toolbar-left">
+
+        <button
+          class="toolbar-button"
+          id="runButton"
+          type="button"
+        >
+          Run
+        </button>
+
+        <button
+          class="toolbar-button"
+          id="formatButton"
+          type="button"
+        >
+          Format
+        </button>
+
+        <button
+          class="toolbar-button"
+          id="newVersionButton"
+          type="button"
+        >
+          Save Version
+        </button>
+
+      </div>
+
+      <div class="toolbar-right">
+
+        <span
+          class="status"
+          id="saveStatus"
+        >
+          Ready
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="editor">
+
+      <div
+        class="line-numbers"
+        id="lineNumbers"
+      ></div>
+
+      <textarea
+        class="code"
+        id="codeEditor"
+        spellcheck="false"
+        wrap="off"
+        placeholder="Select a file"
+      ></textarea>
+
+    </div>
+
+    <div class="bottom">
+
+      <span id="fileStatus">
+        No file selected
+      </span>
+
+      <span>
+        WEBHUB Workspace
+      </span>
+
+    </div>
+
+  </main>
+
+  <aside class="preview-panel">
+
+    <div class="preview-header">
+
+      <strong>Preview</strong>
+
+      <button
+        id="refreshPreview"
+        type="button"
+      >
+        Refresh
+      </button>
+
+    </div>
+
+    <div class="preview-frame">
+
+      <iframe
+        id="preview"
+        title="Project Preview"
+      ></iframe>
+
+    </div>
+
+  </aside>
+
+</div>
+
+<div
+  class="modal"
+  id="fileModal"
+>
+
+  <div class="modal-card">
+
+    <h2>Create New File</h2>
+
+    <input
+      id="newFileName"
+      type="text"
+      maxlength="255"
+      placeholder="example.html"
+    >
+
+    <div class="modal-actions">
+
+      <button
+        id="cancelFile"
+        type="button"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="primary"
+        id="createFile"
+        type="button"
+      >
+        Create
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const API_BASE = "/api";
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  let currentProjectId =
+    params.get("projectId") || "";
+
+  let currentProject = null;
+  let files = [];
+  let activeFileId = null;
+
+  function setStatus(text) {
+    document.getElementById(
+      "saveStatus"
+    ).textContent = text;
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function getFileType(filename) {
+
+    const name =
+      String(filename || "")
+        .toLowerCase();
+
+    if (name.endsWith(".html")) {
+      return "HTML";
+    }
+
+    if (name.endsWith(".css")) {
+      return "CSS";
+    }
+
+    if (name.endsWith(".js")) {
+      return "JS";
+    }
+
+    if (name.endsWith(".json")) {
+      return "JSON";
+    }
+
+    if (
+      name.endsWith(".png") ||
+      name.endsWith(".jpg") ||
+      name.endsWith(".jpeg") ||
+      name.endsWith(".gif") ||
+      name.endsWith(".webp") ||
+      name.endsWith(".svg") ||
+      name.endsWith(".ico")
+    ) {
+      return "IMG";
+    }
+
+    return "FILE";
+  }
+
+  function getMimeType(filename) {
+
+    const name =
+      String(filename || "")
+        .toLowerCase();
+
+    if (
+      name.endsWith(".html") ||
+      name.endsWith(".htm")
+    ) {
+      return "text/html";
+    }
+
+    if (name.endsWith(".css")) {
+      return "text/css";
+    }
+
+    if (name.endsWith(".js")) {
+      return "application/javascript";
+    }
+
+    if (name.endsWith(".json")) {
+      return "application/json";
+    }
+
+    if (name.endsWith(".svg")) {
+      return "image/svg+xml";
+    }
+
+    return "text/plain";
+  }
+
+  async function findProject() {
+
+    if (currentProjectId) {
+      return true;
+    }
+
+    const savedProjectId =
+      localStorage.getItem(
+        "webhub_current_project_id"
+      );
+
+    if (savedProjectId) {
+
+      currentProjectId =
+        savedProjectId;
+
+      return true;
+    }
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE + "/projects",
+          {
+            method: "GET",
+            credentials: "include"
+          }
+        );
+
+      if (response.status === 401) {
+
+        window.location.href =
+          "index1000.html";
+
+        return false;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          "Gagal mengambil project."
+        );
+      }
+
+      const data =
+        await response.json();
+
+      const projects =
+        Array.isArray(data.projects)
+          ? data.projects
+          : [];
+
+      if (!projects.length) {
+
+        alert(
+          "Belum ada project."
+        );
+
+        window.location.href =
+          "index3000.html";
+
+        return false;
+      }
+
+      currentProjectId =
+        projects[0].id;
+
+      localStorage.setItem(
+        "webhub_current_project_id",
+        currentProjectId
+      );
+
+      window.history.replaceState(
+        {},
+        "",
+        "index4000.html?projectId=" +
+        encodeURIComponent(
+          currentProjectId
+        )
+      );
+
+      return true;
+
+    } catch (error) {
+
+      console.error(
+        "FIND PROJECT ERROR:",
+        error
+      );
+
+      alert(
+        error.message ||
+        "Project tidak dapat ditemukan."
+      );
+
+      window.location.href =
+        "index3000.html";
+
+      return false;
+    }
+  }
+
+  async function loadProject() {
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/projects/" +
+          encodeURIComponent(
+            currentProjectId
+          ),
+          {
+            method: "GET",
+            credentials: "include"
+          }
+        );
+
+      if (response.status === 401) {
+
+        window.location.href =
+          "index1000.html";
+
+        return false;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          "Project tidak ditemukan."
+        );
+      }
+
+      const data =
+        await response.json();
+
+      if (
+        !data.success ||
+        !data.project
+      ) {
+        throw new Error(
+          data.message ||
+          "Project tidak ditemukan."
+        );
+      }
+
+      currentProject =
+        data.project;
+
+      currentProjectId =
+        currentProject.id;
+
+      localStorage.setItem(
+        "webhub_current_project_id",
+        currentProjectId
+      );
+
+      document.getElementById(
+        "projectName"
+      ).textContent =
+        currentProject.name ||
+        "Project";
+
+      document.getElementById(
+        "visibilityBadge"
+      ).textContent =
+        currentProject.visibility === "public"
+          ? "Public"
+          : "Private";
+
+      return true;
+
+    } catch (error) {
+
+      console.error(
+        "LOAD PROJECT ERROR:",
+        error
+      );
+
+      localStorage.removeItem(
+        "webhub_current_project_id"
+      );
+
+      currentProjectId = "";
+
+      const found =
+        await findProject();
+
+      if (!found) {
+        return false;
+      }
+
+      return loadProject();
+    }
+  }
+
+  async function loadFiles() {
+
+    const response =
+      await fetch(
+        API_BASE +
+        "/projects/" +
+        encodeURIComponent(
+          currentProjectId
+        ) +
+        "/files",
+        {
+          method: "GET",
+          credentials: "include"
+        }
+      );
+
+    if (response.status === 401) {
+
+      window.location.href =
+        "index1000.html";
+
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        "Gagal mengambil daftar file."
+      );
+    }
+
+    const data =
+      await response.json();
+
+    files =
+      Array.isArray(data.files)
+        ? data.files
+        : [];
+
+    renderFiles();
+
+    if (!files.length) {
+
+      closeCurrentFile();
+
+      return;
+    }
+
+    const indexFile =
+      files.find(
+        file =>
+          String(
+            file.filename
+          ).toLowerCase() ===
+          "index.html"
+      );
+
+    await openFile(
+      indexFile
+        ? indexFile.id
+        : files[0].id
+    );
+  }
+
+  function renderFiles() {
+
+    const list =
+      document.getElementById(
+        "fileList"
+      );
+
+    const keyword =
+      document.getElementById(
+        "fileSearch"
+      ).value
+        .trim()
+        .toLowerCase();
+
+    const filtered =
+      files.filter(
+        file =>
+          String(file.filename || "")
+            .toLowerCase()
+            .includes(keyword)
+      );
+
+    list.innerHTML = "";
+
+    if (!filtered.length) {
+
+      list.innerHTML =
+        '<div style="color:#6e7681;font-size:10px;padding:15px 8px;">No files found.</div>';
+
+      return;
+    }
+
+    filtered.forEach(
+      file => {
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "file" +
+          (
+            file.id === activeFileId
+              ? " active"
+              : ""
+          );
+
+        item.innerHTML =
+          '<span class="file-icon">' +
+          getFileType(
+            file.filename
+          ) +
+          "</span>" +
+          "<span>" +
+          escapeHtml(
+            file.filename
+          ) +
+          "</span>";
+
+        item.addEventListener(
+          "click",
+          function() {
+            openFile(file.id);
+          }
+        );
+
+        list.appendChild(item);
+      }
+    );
+  }
+
+  function renderTabs() {
+
+    const tabs =
+      document.getElementById(
+        "tabs"
+      );
+
+    tabs.innerHTML = "";
+
+    const active =
+      files.find(
+        file =>
+          file.id === activeFileId
+      );
+
+    if (!active) {
+      return;
+    }
+
+    const tab =
+      document.createElement("div");
+
+    tab.className =
+      "tab active";
+
+    tab.innerHTML =
+      "<span>" +
+      escapeHtml(
+        active.filename
+      ) +
+      "</span>" +
+      '<span class="tab-close">Close</span>';
+
+    tab
+      .querySelector(".tab-close")
+      .addEventListener(
+        "click",
+        closeCurrentFile
+      );
+
+    tabs.appendChild(tab);
+  }
+
+  async function openFile(id) {
+
+    const file =
+      files.find(
+        item =>
+          item.id === id
+      );
+
+    if (!file) {
+      return;
+    }
+
+    setStatus(
+      "Loading"
+    );
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/projects/" +
+          encodeURIComponent(
+            currentProjectId
+          ) +
+          "/files/" +
+          encodeURIComponent(
+            file.id
+          ),
+          {
+            method: "GET",
+            credentials: "include"
+          }
+        );
+
+      if (response.status === 401) {
+
+        window.location.href =
+          "index1000.html";
+
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          "Gagal membaca file."
+        );
+      }
+
+      const data =
+        await response.json();
+
+      if (
+        !data.success ||
+        !data.file
+      ) {
+        throw new Error(
+          data.message ||
+          "File tidak ditemukan."
+        );
+      }
+
+      file.content =
+        String(
+          data.file.content || ""
+        );
+
+      activeFileId =
+        file.id;
+
+      document.getElementById(
+        "codeEditor"
+      ).value =
+        file.content;
+
+      document.getElementById(
+        "fileStatus"
+      ).textContent =
+        file.filename;
+
+      updateLineNumbers();
+      renderFiles();
+      renderTabs();
+      updatePreview();
+
+      setStatus(
+        "Ready"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "OPEN FILE ERROR:",
+        error
+      );
+
+      setStatus(
+        "File load failed"
+      );
+
+      alert(
+        error.message ||
+        "Gagal membuka file."
+      );
+    }
+  }
+
+  function closeCurrentFile() {
+
+    activeFileId = null;
+
+    document.getElementById(
+      "codeEditor"
+    ).value = "";
+
+    document.getElementById(
+      "fileStatus"
+    ).textContent =
+      "No file selected";
+
+    document.getElementById(
+      "lineNumbers"
+    ).textContent =
+      "";
+
+    renderFiles();
+    renderTabs();
+
+    setStatus(
+      "Ready"
+    );
+  }
+
+  async function saveCurrentFile() {
+
+    const file =
+      files.find(
+        item =>
+          item.id === activeFileId
+      );
+
+    if (!file) {
+
+      setStatus(
+        "No file selected"
+      );
+
+      return;
+    }
+
+    const content =
+      document.getElementById(
+        "codeEditor"
+      ).value;
+
+    setStatus(
+      "Saving"
+    );
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/projects/" +
+          encodeURIComponent(
+            currentProjectId
+          ) +
+          "/files/" +
+          encodeURIComponent(
+            file.id
+          ),
+          {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body:
+              JSON.stringify({
+                content:
+                  content,
+                mime_type:
+                  file.mime_type ||
+                  getMimeType(
+                    file.filename
+                  )
+              })
+          }
+        );
+
+      if (response.status === 401) {
+
+        window.location.href =
+          "index1000.html";
+
+        return;
+      }
+
+      const data =
+        await response
+          .json()
+          .catch(
+            function() {
+              return {};
+            }
+          );
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        throw new Error(
+          data.message ||
+          "File gagal disimpan."
+        );
+      }
+
+      file.content =
+        content;
+
+      setStatus(
+        "Saved"
+      );
+
+      updatePreview();
+
+    } catch (error) {
+
+      console.error(
+        "SAVE FILE ERROR:",
+        error
+      );
+
+      setStatus(
+        "Save failed"
+      );
+
+      alert(
+        error.message ||
+        "Gagal menyimpan file."
+      );
+    }
+  }
+
+  function updateLineNumbers() {
+
+    const editor =
+      document.getElementById(
+        "codeEditor"
+      );
+
+    const count =
+      editor.value.split("\n").length;
+
+    let output = "";
+
+    for (
+      let i = 1;
+      i <= count;
+      i++
+    ) {
+      output +=
+        i + "\n";
+    }
+
+    document.getElementById(
+      "lineNumbers"
+    ).textContent =
+      output;
+  }
+
+  function updatePreview() {
+
+    const active =
+      files.find(
+        file =>
+          file.id === activeFileId
+      );
+
+    if (!active) {
+      return;
+    }
+
+    if (
+      !String(
+        active.filename
+      )
+        .toLowerCase()
+        .endsWith(".html")
+    ) {
+      return;
+    }
+
+    document.getElementById(
+      "preview"
+    ).srcdoc =
+      document.getElementById(
+        "codeEditor"
+      ).value;
+  }
+
+  function addFile() {
+
+    document.getElementById(
+      "fileModal"
+    ).classList.add(
+      "show"
+    );
+
+    document.getElementById(
+      "newFileName"
+    ).value =
+      "";
+
+    document.getElementById(
+      "newFileName"
+    ).focus();
+  }
+
+  async function createFile() {
+
+    const input =
+      document.getElementById(
+        "newFileName"
+      );
+
+    const filename =
+      input.value.trim();
+
+    if (!filename) {
+      return;
+    }
+
+    if (
+      filename.length > 255 ||
+      filename.includes("/") ||
+      filename.includes("\\") ||
+      filename.includes("..")
+    ) {
+
+      alert(
+        "Nama file tidak valid."
+      );
+
+      return;
+    }
+
+    const exists =
+      files.some(
+        file =>
+          String(
+            file.filename
+          )
+            .toLowerCase() ===
+          filename.toLowerCase()
+      );
+
+    if (exists) {
+
+      alert(
+        "File tersebut sudah ada."
+      );
+
+      return;
+    }
+
+    setStatus(
+      "Creating"
+    );
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/projects/" +
+          encodeURIComponent(
+            currentProjectId
+          ) +
+          "/files",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body:
+              JSON.stringify({
+                filename:
+                  filename,
+                content:
+                  "",
+                mime_type:
+                  getMimeType(
+                    filename
+                  )
+              })
+          }
+        );
+
+      if (response.status === 401) {
+
+        window.location.href =
+          "index1000.html";
+
+        return;
+      }
+
+      const data =
+        await response
+          .json()
+          .catch(
+            function() {
+              return {};
+            }
+          );
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        throw new Error(
+          data.message ||
+          "File gagal dibuat."
+        );
+      }
+
+      closeModal();
+
+      if (data.file) {
+
+        files.push(
+          data.file
+        );
+
+        renderFiles();
+
+        await openFile(
+          data.file.id
+        );
+      }
+
+      setStatus(
+        "Created"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "CREATE FILE ERROR:",
+        error
+      );
+
+      setStatus(
+        "Create failed"
+      );
+
+      alert(
+        error.message ||
+        "Gagal membuat file."
+      );
+    }
+  }
+
+  function closeModal() {
+
+    document.getElementById(
+      "fileModal"
+    ).classList.remove(
+      "show"
+    );
+  }
+
+  function formatCode() {
+
+    const editor =
+      document.getElementById(
+        "codeEditor"
+      );
+
+    if (!activeFileId) {
+      return;
+    }
+
+    if (
+      editor.value.includes("<html") ||
+      editor.value.includes("<body")
+    ) {
+
+      editor.value =
+        editor.value.replace(
+          />\s+</g,
+          ">\n<"
+        );
+    }
+
+    updateLineNumbers();
+
+    setStatus(
+      "Modified"
+    );
+  }
+
+  function runProject() {
+
+    const indexFile =
+      files.find(
+        file =>
+          String(
+            file.filename
+          )
+            .toLowerCase() ===
+          "index.html"
+      );
+
+    if (!indexFile) {
+
+      alert(
+        "Project belum memiliki index.html."
+      );
+
+      return;
+    }
+
+    if (
+      indexFile.id ===
+      activeFileId
+    ) {
+
+      document.getElementById(
+        "preview"
+      ).srcdoc =
+        document.getElementById(
+          "codeEditor"
+        ).value;
+
+      return;
+    }
+
+    if (
+      indexFile.content !==
+      undefined
+    ) {
+
+      document.getElementById(
+        "preview"
+      ).srcdoc =
+        indexFile.content;
+
+      return;
+    }
+
+    openFile(
+      indexFile.id
+    );
+  }
+
+  async function uploadAsset(file) {
+
+    if (!file) {
+      return;
+    }
+
+    const allowedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/gif",
+      "image/webp",
+      "image/svg+xml",
+      "image/x-icon"
+    ];
+
+    if (
+      !allowedTypes.includes(
+        file.type
+      )
+    ) {
+
+      alert(
+        "Tipe file tidak didukung."
+      );
+
+      return;
+    }
+
+    if (
+      file.size >
+      10 * 1024 * 1024
+    ) {
+
+      alert(
+        "Ukuran asset maksimal 10 MB."
+      );
+
+      return;
+    }
+
+    setStatus(
+      "Uploading"
+    );
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/projects/" +
+          encodeURIComponent(
+            currentProjectId
+          ) +
+          "/assets?filename=" +
+          encodeURIComponent(
+            file.name
+          ),
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type":
+                file.type ||
+                "application/octet-stream"
+            },
+            body:
+              file
+          }
+        );
+
+      if (response.status === 401) {
+
+        window.location.href =
+          "index1000.html";
+
+        return;
+      }
+
+      const data =
+        await response
+          .json()
+          .catch(
+            function() {
+              return {};
+            }
+          );
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        throw new Error(
+          data.message ||
+          "Upload asset gagal."
+        );
+      }
+
+      setStatus(
+        "Asset uploaded"
+      );
+
+      alert(
+        "Asset berhasil diupload.\n\n" +
+        "URL:\n" +
+        data.asset.url
+      );
+
+    } catch (error) {
+
+      console.error(
+        "UPLOAD ERROR:",
+        error
+      );
+
+      setStatus(
+        "Upload failed"
+      );
+
+      alert(
+        error.message ||
+        "Gagal mengupload asset."
+      );
+    }
+  }
+
+  document.getElementById(
+    "dashboardButton"
+  ).addEventListener(
+    "click",
+    function() {
+      window.location.href =
+        "index2000.html";
+    }
+  );
+
+  document.getElementById(
+    "saveButton"
+  ).addEventListener(
+    "click",
+    saveCurrentFile
+  );
+
+  document.getElementById(
+    "runButton"
+  ).addEventListener(
+    "click",
+    runProject
+  );
+
+  document.getElementById(
+    "refreshPreview"
+  ).addEventListener(
+    "click",
+    runProject
+  );
+
+  document.getElementById(
+    "formatButton"
+  ).addEventListener(
+    "click",
+    formatCode
+  );
+
+  document.getElementById(
+    "addFileButton"
+  ).addEventListener(
+    "click",
+    addFile
+  );
+
+  document.getElementById(
+    "createFile"
+  ).addEventListener(
+    "click",
+    createFile
+  );
+
+  document.getElementById(
+    "cancelFile"
+  ).addEventListener(
+    "click",
+    closeModal
+  );
+
+  document.getElementById(
+    "uploadAssetButton"
+  ).addEventListener(
+    "click",
+    function() {
+
+      document.getElementById(
+        "assetFileInput"
+      ).click();
+    }
+  );
+
+  document.getElementById(
+    "assetFileInput"
+  ).addEventListener(
+    "change",
+    function() {
+
+      const file =
+        this.files &&
+        this.files[0];
+
+      if (file) {
+        uploadAsset(file);
+      }
+
+      this.value = "";
+    }
+  );
+
+  document.getElementById(
+    "fileSearch"
+  ).addEventListener(
+    "input",
+    renderFiles
+  );
+
+  document.getElementById(
+    "codeEditor"
+  ).addEventListener(
+    "input",
+    function() {
+
+      updateLineNumbers();
+
+      setStatus(
+        "Modified"
+      );
+    }
+  );
+
+  document.getElementById(
+    "codeEditor"
+  ).addEventListener(
+    "scroll",
+    function() {
+
+      document.getElementById(
+        "lineNumbers"
+      ).scrollTop =
+        this.scrollTop;
+    }
+  );
+
+  document.getElementById(
+    "newFileName"
+  ).addEventListener(
+    "keydown",
+    function(event) {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        event.preventDefault();
+
+        createFile();
+      }
+
+      if (
+        event.key === "Escape"
+      ) {
+
+        closeModal();
+      }
+    }
+  );
+
+  document.getElementById(
+    "historyButton"
+  ).addEventListener(
+    "click",
+    function() {
+
+      window.location.href =
+        "index5000.html?projectId=" +
+        encodeURIComponent(
+          currentProjectId
+        );
+    }
+  );
+
+  document.getElementById(
+    "newVersionButton"
+  ).addEventListener(
+    "click",
+    async function() {
+
+      if (!currentProjectId) {
+        return;
+      }
+
+      setStatus(
+        "Saving version"
+      );
+
+      try {
+
+        const response =
+          await fetch(
+            API_BASE +
+            "/projects/" +
+            encodeURIComponent(
+              currentProjectId
+            ) +
+            "/versions",
+            {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+              body:
+                JSON.stringify({
+                  name:
+                    "Workspace version",
+                  description:
+                    "Saved from WEBHUB Workspace"
+                })
+            }
+          );
+
+        const data =
+          await response
+            .json()
+            .catch(
+              function() {
+                return {};
+              }
+            );
+
+        if (
+          !response.ok ||
+          !data.success
+        ) {
+
+          throw new Error(
+            data.message ||
+            "Version gagal disimpan."
+          );
+        }
+
+        setStatus(
+          "Version saved"
+        );
+
+        alert(
+          "Version berhasil disimpan."
+        );
+
+      } catch (error) {
+
+        console.error(
+          "VERSION ERROR:",
+          error
+        );
+
+        setStatus(
+          "Version failed"
+        );
+
+        alert(
+          error.message ||
+          "Gagal menyimpan version."
+        );
+      }
+    }
+  );
+
+  document.getElementById(
+    "downloadButton"
+  ).addEventListener(
+    "click",
+    function() {
+
+      alert(
+        "Export Project belum diaktifkan."
+      );
+    }
+  );
+
+  async function initializeWorkspace() {
+
+    try {
+
+      setStatus(
+        "Finding project"
+      );
+
+      const found =
+        await findProject();
+
+      if (!found) {
+        return;
+      }
+
+      setStatus(
+        "Loading project"
+      );
+
+      const loaded =
+        await loadProject();
+
+      if (!loaded) {
+        return;
+      }
+
+      setStatus(
+        "Loading files"
+      );
+
+      await loadFiles();
+
+      setStatus(
+        "Ready"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "WORKSPACE ERROR:",
+        error
+      );
+
+      setStatus(
+        "Workspace failed"
+      );
+
+      alert(
+        error.message ||
+        "Workspace gagal dimuat."
+      );
+    }
+  }
+
+  initializeWorkspace();
+</script>
+
+</body>
+</html>

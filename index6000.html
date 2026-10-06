@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBHUB — Settings</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #080b10;
+      color: #fff;
+    }
+
+    .topbar {
+      height: 60px;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .logo {
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: #58a6ff;
+    }
+
+    .project-name {
+      color: #8b949e;
+      font-size: 12px;
+    }
+
+    .project-name strong {
+      color: #fff;
+    }
+
+    .logout-top {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 7px 11px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .logout-top:hover {
+      border-color: #f85149;
+      color: #f85149;
+    }
+
+    .layout {
+      min-height: calc(100vh - 60px);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 235px;
+      background: #0d1117;
+      border-right: 1px solid #21262d;
+      padding: 16px 10px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title {
+      color: #8b949e;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      padding: 7px 9px;
+      margin-bottom: 5px;
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #8b949e;
+      text-align: left;
+      padding: 9px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: #161b22;
+      color: #fff;
+    }
+
+    .nav-item.active {
+      border-left: 2px solid #58a6ff;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      max-width: 1000px;
+      padding: 30px;
+    }
+
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .header p {
+      color: #8b949e;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .section {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 17px 19px;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .section-header h2 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .section-header p {
+      color: #8b949e;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .section-body {
+      padding: 20px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      color: #c9d1d9;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .field small {
+      display: block;
+      color: #6e7681;
+      font-size: 9px;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      max-width: 650px;
+      background: #080b10;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      color: #fff;
+      padding: 10px;
+      outline: none;
+      font-family: inherit;
+      font-size: 11px;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #58a6ff;
+    }
+
+    .visibility {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(180px, 300px));
+      gap: 10px;
+    }
+
+    .visibility-option {
+      border: 1px solid #30363d;
+      background: #080b10;
+      border-radius: 8px;
+      padding: 13px;
+      cursor: pointer;
+    }
+
+    .visibility-option:hover {
+      border-color: #58a6ff;
+    }
+
+    .visibility-option.active {
+      border-color: #58a6ff;
+      background: #0d1724;
+    }
+
+    .visibility-option input {
+      display: none;
+    }
+
+    .visibility-title {
+      font-size: 11px;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .visibility-description {
+      color: #8b949e;
+      font-size: 9px;
+      line-height: 1.5;
+    }
+
+    .save-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      margin-top: 20px;
+    }
+
+    .button {
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #c9d1d9;
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      border-color: #58a6ff;
+      color: #fff;
+    }
+
+    .button.primary {
+      background: #238636;
+      border-color: #238636;
+      color: #fff;
+    }
+
+    .button.primary:hover {
+      background: #2ea043;
+    }
+
+    .url-box {
+      display: flex;
+      max-width: 650px;
+    }
+
+    .url-prefix {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-right: 0;
+      border-radius: 7px 0 0 7px;
+      color: #6e7681;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .url-box input {
+      border-radius: 0 7px 7px 0;
+    }
+
+    .account-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 13px 0;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .account-row:first-child {
+      padding-top: 0;
+    }
+
+    .account-row:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .account-label {
+      color: #8b949e;
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    .account-value {
+      color: #fff;
+      font-size: 11px;
+    }
+
+    .account-status {
+      color: #3fb950;
+      font-size: 9px;
+      border: 1px solid #238636;
+      padding: 4px 7px;
+      border-radius: 20px;
+    }
+
+    .danger {
+      border-color: #3d2020;
+    }
+
+    .danger .section-header {
+      border-bottom-color: #3d2020;
+    }
+
+    .danger .section-header h2 {
+      color: #f85149;
+    }
+
+    .danger-text {
+      color: #8b949e;
+      font-size: 10px;
+      line-height: 1.6;
+      max-width: 650px;
+    }
+
+    .danger-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding-top: 15px;
+      margin-top: 15px;
+      border-top: 1px solid #21262d;
+    }
+
+    .danger-button {
+      border: 1px solid #da3633;
+      background: transparent;
+      color: #f85149;
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .danger-button:hover {
+      background: #3d1616;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0, 0, 0, .75);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 420px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 11px;
+      padding: 22px;
+    }
+
+    .modal-card h2 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .modal-card p {
+      color: #8b949e;
+      font-size: 10px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .modal-card input {
+      width: 100%;
+      background: #080b10;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      color: #fff;
+      padding: 10px;
+      outline: none;
+      font-size: 11px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 750px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 20px 13px;
+      }
+
+      .project-name {
+        display: none;
+      }
+
+      .visibility {
+        grid-template-columns: 1fr;
+      }
+
+      .danger-actions {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <a
+    class="logo"
+    href="index2000.html"
+  >
+    WEB<span>HUB</span>
+  </a>
+
+  <div class="project-name">
+    Project:
+    <strong id="topProjectName">
+      My Project
+    </strong>
+  </div>
+
+  <button
+    class="logout-top"
+    id="logoutButton"
+  >
+    Logout
+  </button>
+
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-title">
+      Project
+    </div>
+
+    <a
+      class="nav-item"
+      href="index2000.html"
+    >
+      Dashboard
+    </a>
+
+    <a
+      class="nav-item"
+      href="index3000.html"
+    >
+      Projects
+    </a>
+
+    <a
+      class="nav-item"
+      href="index4000.html"
+    >
+      Workspace
+    </a>
+
+    <a
+      class="nav-item"
+      href="index5000.html"
+    >
+      Version History
+    </a>
+
+    <div class="sidebar-title">
+      Account
+    </div>
+
+    <a
+      class="nav-item active"
+      href="index6000.html"
+    >
+      Settings
+    </a>
+
+    <a
+      class="nav-item"
+      href="index1000.html"
+    >
+      Account / Login
+    </a>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="header">
+
+      <h1>
+        Settings
+      </h1>
+
+      <p>
+        Manage your project, visibility, account,
+        and security settings.
+      </p>
+
+    </div>
+
+    <!-- PROJECT SETTINGS -->
+
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Project Settings
+        </h2>
+
+        <p>
+          Configure the identity and visibility of your project.
+        </p>
+
+      </div>
+
+      <div class="section-body">
+
+        <div class="field">
+
+          <label for="projectName">
+            Project Name
+          </label>
+
+          <input
+            id="projectName"
+            type="text"
+            maxlength="80"
+            value="My Project"
+          >
+
+          <small>
+            This name identifies your project across WEBHUB.
+          </small>
+
+        </div>
+
+        <div class="field">
+
+          <label for="projectDescription">
+            Description
+          </label>
+
+          <textarea
+            id="projectDescription"
+            maxlength="500"
+            placeholder="Describe your project..."
+          >My first WEBHUB project.</textarea>
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Visibility
+          </label>
+
+          <div class="visibility">
+
+            <label
+              class="visibility-option active"
+              id="privateOption"
+            >
+
+              <input
+                type="radio"
+                name="visibility"
+                value="private"
+                checked
+              >
+
+              <div class="visibility-title">
+                🔒 Private
+              </div>
+
+              <div class="visibility-description">
+                Only you can access this project.
+              </div>
+
+            </label>
+
+            <label
+              class="visibility-option"
+              id="publicOption"
+            >
+
+              <input
+                type="radio"
+                name="visibility"
+                value="public"
+              >
+
+              <div class="visibility-title">
+                🌐 Public
+              </div>
+
+              <div class="visibility-description">
+                Anyone with the project URL can view it.
+              </div>
+
+            </label>
+
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Project URL
+          </label>
+
+          <div class="url-box">
+
+            <div class="url-prefix">
+              webhub.vercel.app/
+            </div>
+
+            <input
+              id="projectSlug"
+              type="text"
+              maxlength="60"
+              value="my-project"
+            >
+
+          </div>
+
+          <small>
+            The final URL will be generated and validated by the WEBHUB backend.
+          </small>
+
+        </div>
+
+        <div class="save-row">
+
+          <button
+            class="button"
+            id="resetButton"
+          >
+            Reset
+          </button>
+
+          <button
+            class="button primary"
+            id="saveProject"
+          >
+            Save Changes
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ACCOUNT -->
+
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Account
+        </h2>
+
+        <p>
+          Your WEBHUB account information.
+        </p>
+
+      </div>
+
+      <div class="section-body">
+
+        <div class="account-row">
+
+          <div>
+            <div class="account-label">
+              Username
+            </div>
+
+            <div
+              class="account-value"
+              id="username"
+            >
+              —
+            </div>
+          </div>
+
+          <span class="account-status">
+            Active
+          </span>
+
+        </div>
+
+        <div class="account-row">
+
+          <div>
+            <div class="account-label">
+              Email
+            </div>
+
+            <div
+              class="account-value"
+              id="email"
+            >
+              —
+            </div>
+          </div>
+
+        </div>
+
+        <div class="account-row">
+
+          <div>
+            <div class="account-label">
+              Account ID
+            </div>
+
+            <div
+              class="account-value"
+              id="accountId"
+            >
+              —
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- DANGER ZONE -->
+
+    <section class="section danger">
+
+      <div class="section-header">
+
+        <h2>
+          Danger Zone
+        </h2>
+
+        <p>
+          These actions can permanently affect your project.
+        </p>
+
+      </div>
+
+      <div class="section-body">
+
+        <div class="danger-text">
+          Deleting a project should remove its files,
+          versions, project URL, and related metadata.
+          This action must be confirmed and processed
+          by the WEBHUB backend.
+        </div>
+
+        <div class="danger-actions">
+
+          <span class="danger-text">
+            This action cannot be undone.
+          </span>
+
+          <button
+            class="danger-button"
+            id="deleteProject"
+          >
+            Delete Project
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- DELETE MODAL -->
+
+<div
+  class="modal"
+  id="deleteModal"
+>
+
+  <div class="modal-card">
+
+    <h2>
+      Delete Project
+    </h2>
+
+    <p>
+      This will permanently delete the project,
+      its files, versions, and project data.
+      Enter the project name to confirm.
+    </p>
+
+    <input
+      id="deleteConfirm"
+      type="text"
+      placeholder="Enter project name"
+    >
+
+    <div class="modal-actions">
+
+      <button
+        class="button"
+        id="cancelDelete"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="danger-button"
+        id="confirmDelete"
+      >
+        Delete Permanently
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  /*
+    WEBHUB SETTINGS API
+
+    GET
+    /api/auth/me
+
+    GET
+    /api/projects/:projectId
+
+    PUT
+    /api/projects/:projectId
+
+    DELETE
+    /api/projects/:projectId
+
+    POST
+    /api/auth/logout
+
+    Semua permission dan ownership
+    wajib diverifikasi oleh backend.
+  */
+
+  const API_BASE = "/api";
+
+  let originalProject = {
+    name: "My Project",
+    description: "My first WEBHUB project.",
+    visibility: "private",
+    slug: "my-project"
+  };
+
+  function updateVisibilityUI() {
+
+    const privateRadio =
+      document.querySelector(
+        'input[value="private"]'
+      );
+
+    const publicRadio =
+      document.querySelector(
+        'input[value="public"]'
+      );
+
+    document
+      .getElementById("privateOption")
+      .classList.toggle(
+        "active",
+        privateRadio.checked
+      );
+
+    document
+      .getElementById("publicOption")
+      .classList.toggle(
+        "active",
+        publicRadio.checked
+      );
+
+  }
+
+  document
+    .querySelectorAll(
+      'input[name="visibility"]'
+    )
+    .forEach(input => {
+
+      input.addEventListener(
+        "change",
+        updateVisibilityUI
+      );
+
+    });
+
+  function saveProject() {
+
+    const name =
+      document
+        .getElementById("projectName")
+        .value
+        .trim();
+
+    const description =
+      document
+        .getElementById("projectDescription")
+        .value
+        .trim();
+
+    const slug =
+      document
+        .getElementById("projectSlug")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const visibility =
+      document.querySelector(
+        'input[name="visibility"]:checked'
+      ).value;
+
+    if (!name) {
+
+      alert(
+        "Project name wajib diisi."
+      );
+
+      return;
+
+    }
+
+    if (!/^[a-z0-9-]+$/.test(slug)) {
+
+      alert(
+        "Project URL hanya boleh menggunakan huruf kecil, angka, dan hyphen."
+      );
+
+      return;
+
+    }
+
+    originalProject = {
+      name,
+      description,
+      visibility,
+      slug
+    };
+
+    document
+      .getElementById("topProjectName")
+      .textContent =
+        name;
+
+    /*
+      Backend nanti:
+
+      PUT
+      /api/projects/:projectId
+
+      Body:
+      {
+        name,
+        description,
+        visibility,
+        slug
+      }
+    */
+
+    alert(
+      "Perubahan project tersimpan di tampilan. Backend WEBHUB akan menjadi penyimpanan permanen."
+    );
+
+  }
+
+  function resetProject() {
+
+    document
+      .getElementById("projectName")
+      .value =
+        originalProject.name;
+
+    document
+      .getElementById("projectDescription")
+      .value =
+        originalProject.description;
+
+    document
+      .getElementById("projectSlug")
+      .value =
+        originalProject.slug;
+
+    const radio =
+      document.querySelector(
+        `input[value="${originalProject.visibility}"]`
+      );
+
+    radio.checked = true;
+
+    updateVisibilityUI();
+
+  }
+
+  function openDeleteModal() {
+
+    document
+      .getElementById("deleteModal")
+      .classList.add("show");
+
+    document
+      .getElementById("deleteConfirm")
+      .value = "";
+
+    document
+      .getElementById("deleteConfirm")
+      .focus();
+
+  }
+
+  function closeDeleteModal() {
+
+    document
+      .getElementById("deleteModal")
+      .classList.remove("show");
+
+  }
+
+  function confirmDelete() {
+
+    const entered =
+      document
+        .getElementById("deleteConfirm")
+        .value
+        .trim();
+
+    const currentName =
+      document
+        .getElementById("projectName")
+        .value
+        .trim();
+
+    if (
+      !entered ||
+      entered !== currentName
+    ) {
+
+      alert(
+        "Nama project tidak sesuai."
+      );
+
+      return;
+
+    }
+
+    /*
+      Backend wajib melakukan:
+
+      DELETE
+      /api/projects/:projectId
+
+      Backend harus memastikan:
+      - user terautentikasi
+      - project milik user
+      - project files ikut dihapus
+      - versions ikut dihapus
+      - storage dibersihkan
+    */
+
+    alert(
+      "Delete request akan diproses oleh backend WEBHUB."
+    );
+
+    closeDeleteModal();
+
+  }
+
+  async function logout() {
+
+    /*
+      Backend nanti:
+
+      POST /api/auth/logout
+
+      Session/cookie harus dihapus
+      oleh backend.
+    */
+
+    try {
+
+      await fetch(
+        API_BASE + "/auth/logout",
+        {
+          method: "POST",
+          credentials: "include"
+        }
+      );
+
+    } catch (error) {
+
+      /*
+        Jangan menampilkan detail
+        internal error kepada user.
+      */
+
+    }
+
+    location.href =
+      "index1000.html";
+
+  }
+
+  /*
+    Demo account data.
+    Nanti diganti dengan GET /api/auth/me.
+  */
+
+  document
+    .getElementById("username")
+    .textContent =
+      "demo-user";
+
+  document
+    .getElementById("email")
+    .textContent =
+      "user@example.com";
+
+  document
+    .getElementById("accountId")
+    .textContent =
+      "account-pending";
+
+  document
+    .getElementById("saveProject")
+    .addEventListener(
+      "click",
+      saveProject
+    );
+
+  document
+    .getElementById("resetButton")
+    .addEventListener(
+      "click",
+      resetProject
+    );
+
+  document
+    .getElementById("deleteProject")
+    .addEventListener(
+      "click",
+      openDeleteModal
+    );
+
+  document
+    .getElementById("cancelDelete")
+    .addEventListener(
+      "click",
+      closeDeleteModal
+    );
+
+  document
+    .getElementById("confirmDelete")
+    .addEventListener(
+      "click",
+      confirmDelete
+    );
+
+  document
+    .getElementById("logoutButton")
+    .addEventListener(
+      "click",
+      logout
+    );
+
+  document
+    .getElementById("deleteModal")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        if (event.target === this) {
+          closeDeleteModal();
+        }
+
+      }
+    );
+
+  updateVisibilityUI();
+
+</script>
+
+</body>
+</html>

@@ -1728,6 +1728,31 @@ app.get("/project/:slug/:filename", async (req, res) => {
     return res.status(500).send("Gagal mengambil asset project.");
   }
 });
+
+app.get("/index1000.html", (req, res) => {
+  res.sendFile(__dirname + "/index1000.html");
+});
+
+app.get("/index2000.html", (req, res) => {
+  res.sendFile(__dirname + "/index2000.html");
+});
+
+app.get("/index3000.html", (req, res) => {
+  res.sendFile(__dirname + "/index3000.html");
+});
+
+app.get("/index4000.html", (req, res) => {
+  res.sendFile(__dirname + "/index4000.html");
+});
+
+app.get("/index5000.html", (req, res) => {
+  res.sendFile(__dirname + "/index5000.html");
+});
+
+app.get("/index6000.html", (req, res) => {
+  res.sendFile(__dirname + "/index6000.html");
+});
+
 app.use(express.static(__dirname));
 
 app.use((req, res) => {

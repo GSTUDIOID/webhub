@@ -108,6 +108,10 @@ async function uploadStorageObject(path, buffer, contentType) {
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index1000.html");
+});
+
 function normalizeUsername(value) {
   return String(value || "").trim().toLowerCase();
 }
